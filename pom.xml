@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.xetorthio</groupId>
 	<artifactId>jedisque</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>jedisque</name>
 	<description>Java client for disque</description>
 	<licenses>
