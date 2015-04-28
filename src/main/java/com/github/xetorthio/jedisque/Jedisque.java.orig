@@ -1,5 +1,12 @@
 package com.github.xetorthio.jedisque;
 
+<<<<<<< HEAD
+import java.util.List;
+import java.util.Map;
+
+import redis.clients.jedis.BuilderFactory;
+import redis.clients.jedis.Protocol;
+=======
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -7,8 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import redis.clients.jedis.Protocol;
 import redis.clients.jedis.exceptions.JedisConnectionException;
+>>>>>>> 239f2f3e9b0875ce85699efafd8716b696cbaf21
 import redis.clients.util.SafeEncoder;
 
 public class Jedisque extends redis.clients.jedis.Connection {
@@ -32,7 +39,8 @@ public class Jedisque extends redis.clients.jedis.Connection {
 	public void connect() {
 		while (!this.isConnected()) {
 			if (uris.size() == 0) {
-				throw new JedisConnectionException("Could not connect to any of the provided nodes");
+				throw new JedisConnectionException(
+						"Could not connect to any of the provided nodes");
 			}
 			int index = randomGenerator.nextInt(uris.size());
 
@@ -75,6 +83,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		return getBulkReply();
 	}
 
+<<<<<<< HEAD
 	public Long qlen(String queueName) {
 		sendCommand(Commands.QLEN, queueName);
 		return getIntegerReply();
@@ -91,13 +100,20 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		return getIntegerReply();
 	}
 
-	public Long dequeue(String... jobIds) {
+	public Long dequeue(String ...jobIds) {
 		sendCommand(Commands.DEQUEUE, jobIds);
 		return getIntegerReply();
 	}
 
-	public Long enqueue(String... jobIds) {
+	public Long enqueue(String ...jobIds) {
 		sendCommand(Commands.ENQUEUE, jobIds);
 		return getIntegerReply();
 	}
+
+=======
+	public String info() {
+		sendCommand(Commands.INFO);
+		return getBulkReply();
+	}
+>>>>>>> 239f2f3e9b0875ce85699efafd8716b696cbaf21
 }

@@ -1,0 +1,23 @@
+package com.github.xetorthio.jedisque;
+
+import redis.clients.jedis.ProtocolCommand;
+import redis.clients.util.SafeEncoder;
+
+public enum Commands implements ProtocolCommand {
+<<<<<<< HEAD
+	ADDJOB, GETJOB, ACKJOB, INFO, QLEN, QPEEK, DELJOB, DEQUEUE, ENQUEUE;
+=======
+	ADDJOB, INFO;
+>>>>>>> 239f2f3e9b0875ce85699efafd8716b696cbaf21
+	private final byte[] raw;
+
+	Commands() {
+		raw = SafeEncoder.encode(this.name());
+	}
+
+	@Override
+	public byte[] getRaw() {
+		return raw;
+	}
+
+}
