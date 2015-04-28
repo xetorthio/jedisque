@@ -143,8 +143,6 @@ public class JedisqueTest {
 		try (Jedisque q = new Jedisque()) {
 			String queue = getQueueName();
 			String jobId = q.addJob(queue, "testJob", 10);
-			System.out.println(jobId);
-			System.out.println(queue);
 			Long count = q.dequeue(jobId);
 			assertEquals(count.longValue(), 1);
 		}
