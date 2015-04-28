@@ -35,12 +35,18 @@ public class JedisqueTest {
 			String jobId = q.addJob("somequeue", "message", 10);
 			Long count = q.ackjob(jobId);
 			assertEquals(count.longValue(), 1);
+			assertEquals(q.qlen("somequeue").longValue(), 0);
 		}
 	}
 
 	@Test
-	@Ignore(value = "pending")
 	public void fastAck() {
+		try (Jedisque q = new Jedisque()) {
+			String jobId = q.addJob("fastack", "message", 10);
+			Long count = q.fastack(jobId);
+			assertEquals(count.longValue(), 1);
+			assertEquals(q.qlen("fastack").longValue(), 0);
+		}
 	}
 
 	@Test

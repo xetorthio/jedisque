@@ -4,7 +4,7 @@ import redis.clients.jedis.ProtocolCommand;
 import redis.clients.util.SafeEncoder;
 
 public enum Commands implements ProtocolCommand {
-	ADDJOB, GETJOB, ACKJOB, INFO, QLEN, QPEEK, DELJOB, DEQUEUE, ENQUEUE;
+	ADDJOB, GETJOB, ACKJOB, INFO, QLEN, QPEEK, DELJOB, DEQUEUE, ENQUEUE, FASTACK;
 	private final byte[] raw;
 
 	Commands() {

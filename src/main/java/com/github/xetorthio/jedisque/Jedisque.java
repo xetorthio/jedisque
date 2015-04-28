@@ -54,7 +54,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 
 	public List<Job> getJob(String... queueNames) {
 		final byte[][] params = new byte[queueNames.length + 1][];
-		params[0] = SafeEncoder.encode("FROM");
+		params[0] = Keyword.FROM.raw;
 		System.arraycopy(SafeEncoder.encodeMany(queueNames), 0, params, 1, queueNames.length);
 		sendCommand(Commands.GETJOB, params);
 		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
@@ -99,5 +99,21 @@ public class Jedisque extends redis.clients.jedis.Connection {
 	public Long enqueue(String... jobIds) {
 		sendCommand(Commands.ENQUEUE, jobIds);
 		return getIntegerReply();
+	}
+
+	public Long fastack(String ...jobIds) {
+		sendCommand(Commands.FASTACK, jobIds);
+		return getIntegerReply();
+	}
+	
+
+	private enum Keyword {
+		FROM;
+		private final byte[] raw;
+
+		Keyword() {
+			raw = SafeEncoder.encode(this.name());
+		}
+
 	}
 }
