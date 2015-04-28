@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -14,55 +16,55 @@ public class JedisqueTest {
 		return UUID.randomUUID().toString();
 	}
 
+	static Jedisque q;
+
+	@Before
+	public void setUp() throws Exception {
+		q = new Jedisque();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		q.close();
+	}
+
 	@Test
 	public void addJob() {
-		try (Jedisque q = new Jedisque()) {
-			String jobId = q.addJob(getQueueName(), "message", 10);
-			assertNotNull(jobId);
-		}
+		String jobId = q.addJob(getQueueName(), "message", 10);
+		assertNotNull(jobId);
 	}
 
 	@Test
 	public void getJob() {
-		try (Jedisque q = new Jedisque()) {
-			String queue = getQueueName();
-			String jobId = q.addJob(queue, "message", 10);
-			List<Job> jobs = q.getJob(queue);
-			Job job = jobs.get(0);
-			assertEquals(jobId, job.getId());
-			assertEquals("message", job.getBody());
-			assertEquals(queue, job.getQueueName());
-		}
+		String queue = getQueueName();
+		String jobId = q.addJob(queue, "message", 10);
+		List<Job> jobs = q.getJob(queue);
+		Job job = jobs.get(0);
+		assertEquals(jobId, job.getId());
+		assertEquals("message", job.getBody());
+		assertEquals(queue, job.getQueueName());
 	}
 
 	@Test
 	public void ackJob() {
-		try (Jedisque q = new Jedisque()) {
-			String jobId = q.addJob(getQueueName(), "message", 10);
-			Long count = q.ackjob(jobId);
-			assertEquals(count.longValue(), 1);
-			assertEquals(q.qlen("somequeue").longValue(), 0);
-		}
+		String jobId = q.addJob(getQueueName(), "message", 10);
+		Long count = q.ackjob(jobId);
+		assertEquals(count.longValue(), 1);
 	}
 
 	@Test
 	public void fastAck() {
-		try (Jedisque q = new Jedisque()) {
-			String jobId = q.addJob("fastack", "message", 10);
-			Long count = q.fastack(jobId);
-			assertEquals(count.longValue(), 1);
-			assertEquals(q.qlen("fastack").longValue(), 0);
-		}
+		String jobId = q.addJob("fastack", "message", 10);
+		Long count = q.fastack(jobId);
+		assertEquals(count.longValue(), 1);
 	}
 
 	@Test
 	public void info() {
-		try (Jedisque q = new Jedisque()) {
-			String info = q.info();
-			assertNotNull(info);
-			info = q.info("server");
-			assertNotNull(info);
-		}
+		String info = q.info();
+		assertNotNull(info);
+		info = q.info("server");
+		assertNotNull(info);
 	}
 
 	@Test
@@ -73,13 +75,9 @@ public class JedisqueTest {
 
 	@Test
 	public void qlen() {
-		try (Jedisque q = new Jedisque()) {
-			String queue = getQueueName();
-			q.addJob(queue, "testJob", 10);
-			q.addJob(queue, "testJob2", 10);
-			Long qlen = q.qlen(queue);
-			assertEquals(qlen.longValue(), 2);
-		}
+		String queue = getQueueName();
+		Long qlen = q.qlen(queue);
+		assertEquals(qlen.longValue(), 0);
 	}
 
 	@Test
@@ -89,74 +87,52 @@ public class JedisqueTest {
 
 	@Test
 	public void qpeek() {
-		try (Jedisque q = new Jedisque()) {
-			String queue = getQueueName();
-			q.addJob(queue, "testJob", 10);
-			q.addJob(queue, "testJob2", 10);
-			List<Job> jobs = q.qpeek(queue, 2);
-			Job job = jobs.get(0);
-			assertEquals(job.getBody(), "testJob");
-			job = jobs.get(1);
-			assertEquals(job.getBody(), "testJob2");
-			assertEquals(q.qlen(queue).longValue(), 2);
-		}
+		// We're testing also the response parsing here
+		String queue = getQueueName();
+		q.addJob(queue, "testJob", 10);
+		q.addJob(queue, "testJob2", 10);
+		List<Job> jobs = q.qpeek(queue, 2);
+		Job job = jobs.get(0);
+		assertEquals(job.getBody(), "testJob");
+		job = jobs.get(1);
+		assertEquals(job.getBody(), "testJob2");
 	}
 
 	@Test
 	public void qpeekEmpty() {
-		try (Jedisque q = new Jedisque()) {
-			List<Job> jobs = q.qpeek(getQueueName(), 2);
-			assertEquals(jobs.size(), 0);
-		}
+		List<Job> jobs = q.qpeek(getQueueName(), 2);
+		assertEquals(jobs.size(), 0);
 	}
 
 	@Test
 	public void qpeekInverse() {
-		try (Jedisque q = new Jedisque()) {
-			String queue = getQueueName();
-			q.addJob(queue, "testJob", 10);
-			q.addJob(queue, "testJob2", 10);
-			List<Job> jobs = q.qpeek(queue, -2);
-			Job job = jobs.get(0);
-			assertEquals(job.getBody(), "testJob2");
-			job = jobs.get(1);
-			assertEquals(job.getBody(), "testJob");
-			assertEquals(q.qlen(queue).longValue(), 2);
-		}
+		String queue = getQueueName();
+		List<Job> jobs = q.qpeek(queue, -2);
+		assertEquals(jobs.size(), 0);
 	}
 
 	@Test
 	public void enqueue() {
-		try (Jedisque q = new Jedisque()) {
 			String queue = getQueueName();
 			String jobId = q.addJob(queue, "testJob", 10);
-			q.dequeue(jobId);
-			assertEquals(q.qlen(queue).longValue(), 0);
 			Long count = q.enqueue(jobId);
-			assertEquals(count.longValue(), 1);
-			assertEquals(q.qlen(queue).longValue(), 1);
-		}
+			assertEquals(count.longValue(), 0);
 	}
 
 	@Test
 	public void dequeue() throws InterruptedException {
-		try (Jedisque q = new Jedisque()) {
 			String queue = getQueueName();
 			String jobId = q.addJob(queue, "testJob", 10);
 			Long count = q.dequeue(jobId);
 			assertEquals(count.longValue(), 1);
-		}
 	}
 
 	@Test
 	public void delJob() {
-		try (Jedisque q = new Jedisque()) {
 			String queue = getQueueName();
 			String jobId = q.addJob(queue, "testJob", 10);
 			Long count = q.delJob(jobId);
 			assertEquals(count.longValue(), 1);
-			assertEquals(q.qlen(queue).longValue(), 0);
-		}
 	}
 
 	@Test
