@@ -1,11 +1,27 @@
 package com.github.xetorthio.jedisque;
 
-import org.junit.Ignore;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.junit.Test;
+
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class ConnectionTest {
 	@Test
-	@Ignore(value = "pending")
-	public void iterateOverHosts() {
+	public void iterateOverHosts() throws URISyntaxException {
+		try (Jedisque q = new Jedisque(new URI("disque://localhost:55665"),
+				new URI("disque://localhost:7711"))) {
+			q.info();
+		}
+	}
+
+	@Test(expected = JedisConnectionException.class)
+	public void throwExceptionWhenNodesAreUnavailbale()
+			throws URISyntaxException {
+		try (Jedisque q = new Jedisque(new URI("disque://localhost:55665"),
+				new URI("disque://localhost:55666"))) {
+			q.info();
+		}
 	}
 }

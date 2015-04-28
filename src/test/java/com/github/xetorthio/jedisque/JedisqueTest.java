@@ -30,8 +30,11 @@ public class JedisqueTest {
 	}
 
 	@Test
-	@Ignore(value = "pending")
 	public void info() {
+		try (Jedisque q = new Jedisque()) {
+			String info = q.info();
+			assertNotNull(info);
+		}
 	}
 
 	@Test
