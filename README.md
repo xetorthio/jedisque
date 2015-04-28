@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/xetorthio/jedisque.png?branch=master)](https://travis-ci.org/xetorthio/jedisque)
-
 # Jedisque
 
 Jedisque is a minimal java client for [Disque](http://github.com/antirez/disque "Disque").
