@@ -16,3 +16,6 @@ hs_err_pid*
 .settings/
 target
 nodes.conf
+
+pom.xml.releaseBackup
+release.properties
