@@ -15,8 +15,7 @@ Jedisque q = new Jedisque(
 			new URI("disque://192.168.0.1:7711"),
 			new URI("disque://192.168.0.4:8822")
 		);
-Job j = new Job("foo", "bar", 10000);
-String jobId = q.addJob(j);
+String jobId = q.addJob("foo", "bar", 10000);
 ```
 
 ```java
