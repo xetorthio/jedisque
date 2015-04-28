@@ -1,0 +1,50 @@
+PATH := ./disque-git/src:${PATH}
+
+define DISQUE_CONF
+daemonize yes
+port 7711
+pidfile /tmp/disque1.pid
+logfile /tmp/disque1.log
+appendonly no
+endef
+
+export DISQUE_CONF
+start: cleanup
+	echo "$$DISQUE_CONF" | disque-server -
+
+cleanup:
+
+stop:
+	kill `cat /tmp/disque1.pid`
+
+test:
+	make start
+	sleep 2
+	mvn -Dtest=${TEST} clean compile test
+	make stop
+
+package:
+	make start
+	mvn clean package
+	make stop
+
+deploy:
+	make start
+	mvn clean deploy
+	make stop
+
+format:
+	mvn java-formatter:format
+
+release:
+	make start
+	mvn release:clean
+	mvn release:prepare
+	mvn release:perform -DskipTests
+	make stop
+
+travis-install:
+	[ ! -e redis-git ] && git clone https://github.com/antirez/disque.git disque-git || true
+	make -C redis-git -j4
+
+.PHONY: test
