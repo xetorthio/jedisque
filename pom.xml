@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.xetorthio</groupId>
 	<artifactId>jedisque</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>jedisque</name>
 	<description>Java client for disque</description>
 	<licenses>
@@ -16,7 +16,7 @@
 		<connection>scm:git:git@github.com:xetorthio/jedisque.git</connection>
 		<url>scm:git:git@github.com:xetorthio/jedisque.git</url>
 		<developerConnection>scm:git:git@github.com:xetorthio/jedisque.git</developerConnection>
-		<tag>jedisque-0.0.1</tag>
+		<tag>jedis-0.0.1</tag>
 	</scm>
 	<dependencies>
 		<dependency>
