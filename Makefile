@@ -23,9 +23,10 @@ test:
 	mvn -Dtest=${TEST} clean compile test
 	make stop
 
-deploy:
+release:
 	make start
-	mvn clean deploy
+	mvn clean release:clean release:prepare
+	mvn release:perform
 	make stop
 
 format:

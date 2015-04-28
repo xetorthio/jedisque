@@ -6,6 +6,23 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>jedisque</name>
 	<description>Java client for disque</description>
+	<url>https://github.com/xetorthio/jedisque</url>
+	<licenses>
+		<license>
+			<name>MIT</name>
+			<url>http://github.com/xetorthio/jedis/raw/master/LICENSE.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<issueManagement>
+		<system>github</system>
+		<url>http://github.com/xetorthio/jedisque/issues</url>
+	</issueManagement>
+	<scm>
+		<connection>scm:git:git@github.com:xetorthio/jedisque.git</connection>
+		<url>scm:git:git@github.com:xetorthio/jedisque.git</url>
+		<developerConnection>scm:git:git@github.com:xetorthio/jedisque.git</developerConnection>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -24,6 +41,17 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<useReleaseProfile>false</useReleaseProfile>
+					<releaseProfiles>release</releaseProfiles>
+					<goals>deploy</goals>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

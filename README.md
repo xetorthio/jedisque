@@ -7,6 +7,18 @@ Jedisque uses [Jedis](http://github.com/xetorthio/jedis "Jedis") as a redis clie
 ## How do I use it?
 
 To use it just:
+
+```xml
+<dependency>
+    <groupId>com.github.xetorthio</groupId>
+    <artifactId>jedisque</artifactId>
+    <version>x.y.z</version>
+    <type>jar</type>
+    <scope>compile</scope>
+</dependency>
+```
+
+Please replace ```x.y.z``` version with one of the available versions.
     
 ```java
 Jedisque q = new Jedisque(
