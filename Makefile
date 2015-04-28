@@ -23,11 +23,6 @@ test:
 	mvn -Dtest=${TEST} clean compile test
 	make stop
 
-package:
-	make start
-	mvn clean package
-	make stop
-
 deploy:
 	make start
 	mvn clean deploy
@@ -35,13 +30,6 @@ deploy:
 
 format:
 	mvn java-formatter:format
-
-release:
-	make start
-	mvn release:clean
-	mvn release:prepare
-	mvn release:perform -DskipTests
-	make stop
 
 travis-install:
 	[ ! -e redis-git ] && git clone https://github.com/antirez/disque.git disque-git || true
