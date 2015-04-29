@@ -49,7 +49,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 	}
 
 	public String addJob(String queueName, String job, int mstimeout) {
-		sendCommand(Commands.ADDJOB, SafeEncoder.encodeMany(queueName, job, String.valueOf(mstimeout)));
+		sendCommand(Command.ADDJOB, SafeEncoder.encodeMany(queueName, job, String.valueOf(mstimeout)));
 		return getBulkReply();
 	}
 
@@ -59,7 +59,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		addJobCommand.add(job);
 		addJobCommand.add(String.valueOf(mstimeout));
 		addJobCommand.addAll(getJobParamsAsList(params));
-		sendCommand(Commands.ADDJOB, addJobCommand.toArray(new String[addJobCommand.size()]));
+		sendCommand(Command.ADDJOB, addJobCommand.toArray(new String[addJobCommand.size()]));
 		return getBulkReply();
 	}
 
@@ -67,53 +67,53 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		final byte[][] params = new byte[queueNames.length + 1][];
 		params[0] = Keyword.FROM.raw;
 		System.arraycopy(SafeEncoder.encodeMany(queueNames), 0, params, 1, queueNames.length);
-		sendCommand(Commands.GETJOB, params);
+		sendCommand(Command.GETJOB, params);
 		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
 
 	public Long ackjob(String... jobIds) {
-		sendCommand(Commands.ACKJOB, jobIds);
+		sendCommand(Command.ACKJOB, jobIds);
 		return getIntegerReply();
 	}
 
 	public String info() {
-		sendCommand(Commands.INFO);
+		sendCommand(Command.INFO);
 		return getBulkReply();
 	}
 
 	public String info(String section) {
-		sendCommand(Commands.INFO, section);
+		sendCommand(Command.INFO, section);
 		return getBulkReply();
 	}
 
 	public Long qlen(String queueName) {
-		sendCommand(Commands.QLEN, queueName);
+		sendCommand(Command.QLEN, queueName);
 		return getIntegerReply();
 
 	}
 
 	public List<Job> qpeek(String queueName, int count) {
-		sendCommand(Commands.QPEEK, SafeEncoder.encode(queueName), Protocol.toByteArray(count));
+		sendCommand(Command.QPEEK, SafeEncoder.encode(queueName), Protocol.toByteArray(count));
 		return JedisqueBuilder.JOB_PEEK.build(getObjectMultiBulkReply());
 	}
 
 	public Long delJob(String jobId) {
-		sendCommand(Commands.DELJOB, jobId);
+		sendCommand(Command.DELJOB, jobId);
 		return getIntegerReply();
 	}
 
 	public Long dequeue(String... jobIds) {
-		sendCommand(Commands.DEQUEUE, jobIds);
+		sendCommand(Command.DEQUEUE, jobIds);
 		return getIntegerReply();
 	}
 
 	public Long enqueue(String... jobIds) {
-		sendCommand(Commands.ENQUEUE, jobIds);
+		sendCommand(Command.ENQUEUE, jobIds);
 		return getIntegerReply();
 	}
 
 	public Long fastack(String ...jobIds) {
-		sendCommand(Commands.FASTACK, jobIds);
+		sendCommand(Command.FASTACK, jobIds);
 		return getIntegerReply();
 	}
 	
@@ -145,13 +145,5 @@ public class Jedisque extends redis.clients.jedis.Connection {
 
 
 
-	private enum Keyword {
-		FROM, REPLICATE, DELAY, RETRY, TTL, MAXLEN, ASYNC;
-		private final byte[] raw;
-
-		Keyword() {
-			raw = SafeEncoder.encode(this.name());
-		}
-
-	}
+	
 }
