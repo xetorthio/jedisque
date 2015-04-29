@@ -8,63 +8,59 @@ public class JobParams {
 	private Integer ttl;
 	private Integer maxlen;
 	private Boolean async;
-	
-	public JobParams(Integer replicate, Integer delay, Integer retry, Integer ttl, Integer maxlen, Boolean async) {
-		super();
-		this.replicate = replicate;
-		this.delay = delay;
-		this.retry = retry;
-		this.ttl = ttl;
-		this.maxlen = maxlen;
-		this.async = async;
-	}
 
 	public Integer getReplicate() {
 		return replicate;
 	}
 
-	public void setReplicate(Integer replicate) {
+	public JobParams setReplicate(Integer replicate) {
 		this.replicate = replicate;
+		return this;
 	}
 
 	public Integer getDelay() {
 		return delay;
 	}
 
-	public void setDelay(Integer delay) {
+	public JobParams setDelay(Integer delay) {
 		this.delay = delay;
+		return this;
 	}
 
 	public Integer getRetry() {
 		return retry;
 	}
 
-	public void setRetry(Integer retry) {
+	public JobParams setRetry(Integer retry) {
 		this.retry = retry;
+		return this;
 	}
 
 	public Integer getTTL() {
 		return ttl;
 	}
 
-	public void setTTL(Integer ttl) {
+	public JobParams setTTL(Integer ttl) {
 		this.ttl = ttl;
+		return this;
 	}
 
 	public Integer getMaxlen() {
 		return maxlen;
 	}
 
-	public void setMaxlen(Integer maxlen) {
+	public JobParams setMaxlen(Integer maxlen) {
 		this.maxlen = maxlen;
+		return this;
 	}
 
 	public Boolean getAsync() {
 		return async;
 	}
 
-	public void setAsync(Boolean async) {
+	public JobParams setAsync(Boolean async) {
 		this.async = async;
+		return this;
 	}
 	
 }
