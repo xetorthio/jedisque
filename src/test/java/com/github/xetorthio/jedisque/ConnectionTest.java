@@ -14,7 +14,6 @@ public class ConnectionTest {
 		Jedisque q = new Jedisque(new URI("disque://localhost:55665"), new URI("disque://localhost:7711"));
 		q.info();
 		q.close();
-
 	}
 
 	@Test(expected = JedisConnectionException.class)

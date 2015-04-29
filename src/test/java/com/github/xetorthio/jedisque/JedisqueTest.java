@@ -33,6 +33,21 @@ public class JedisqueTest {
 		String jobId = q.addJob(getQueueName(), "message", 10);
 		assertNotNull(jobId);
 	}
+	
+
+	@Test
+	public void addJobWithParams() {
+		JobParams params = new JobParams()
+		.setReplicate(1)
+		.setRetry(10)
+		.setTTL(10)
+		.setMaxlen(10)
+		.setDelay(10)
+		.setAsync(true);
+		String jobId = q.addJob(getQueueName(), "message", 10, params);
+		assertNotNull(jobId);
+	}
+
 
 	@Test
 	public void getJob() {

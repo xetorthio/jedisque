@@ -3,11 +3,11 @@ package com.github.xetorthio.jedisque;
 import redis.clients.jedis.ProtocolCommand;
 import redis.clients.util.SafeEncoder;
 
-public enum Commands implements ProtocolCommand {
+public enum Command implements ProtocolCommand {
 	ADDJOB, GETJOB, ACKJOB, INFO, QLEN, QPEEK, DELJOB, DEQUEUE, ENQUEUE, FASTACK;
 	private final byte[] raw;
 
-	Commands() {
+	Command() {
 		raw = SafeEncoder.encode(this.name());
 	}
 
