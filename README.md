@@ -36,6 +36,6 @@ Jedisque q = new Jedisque(
 List<Job> jobs = q.getJob("foo", "foo2");
 ```
 
-For more usage examples check the tests.
+For more usage examples check the [tests](https://github.com/xetorthio/jedisque/blob/master/src/test/java/com/github/xetorthio/jedisque/JedisqueTest.java).
 
 And you are done!
