@@ -59,6 +59,15 @@ public class JedisqueTest {
 		assertEquals("message", job.getBody());
 		assertEquals(queue, job.getQueueName());
 	}
+	
+	@Test
+	public void getJobWithParams() {
+		String queue = getQueueName();
+		q.addJob(queue, "message", 10);
+		q.addJob(queue, "message", 10);
+		List<Job> jobs = q.getJob(100, 2, queue);
+		assertEquals(jobs.size(), 2);
+	}
 
 	@Test
 	public void ackJob() {
@@ -151,8 +160,11 @@ public class JedisqueTest {
 	}
 
 	@Test
-	@Ignore(value = "pending")
 	public void show() {
+		String queue = getQueueName();
+		String jobId = q.addJob(queue, "testJob", 10);
+		JobInfo jobInfo = q.show(jobId);
+		assertNotNull(jobInfo);
 	}
 
 	@Test

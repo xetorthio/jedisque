@@ -4,7 +4,7 @@ import redis.clients.util.SafeEncoder;
 
 
 enum Keyword {
-		FROM, REPLICATE, DELAY, RETRY, TTL, MAXLEN, ASYNC;
+		FROM, REPLICATE, DELAY, RETRY, TTL, MAXLEN, ASYNC, TIMEOUT, COUNT;
 		final byte[] raw;
 
 		Keyword() {

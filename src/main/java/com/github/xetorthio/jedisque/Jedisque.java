@@ -70,6 +70,19 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		sendCommand(Command.GETJOB, params);
 		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
+	
+
+	public List<Job> getJob(int timeout, int count, String ...queueNames) {
+		final byte[][] params = new byte[queueNames.length + 5][];
+		params[0] = Keyword.TIMEOUT.raw;
+		params[1] = Protocol.toByteArray(timeout);
+		params[2] = Keyword.COUNT.raw;
+		params[3] = Protocol.toByteArray(count);
+		params[4] = Keyword.FROM.raw;
+		System.arraycopy(SafeEncoder.encodeMany(queueNames), 0, params, 5, queueNames.length);
+		sendCommand(Command.GETJOB, params);
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
+	}
 
 	public Long ackjob(String... jobIds) {
 		sendCommand(Command.ACKJOB, jobIds);
@@ -117,6 +130,12 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		return getIntegerReply();
 	}
 	
+
+	public JobInfo show(String jobId) {
+		sendCommand(Command.SHOW, jobId);
+		return JedisqueBuilder.JOB_SHOW.build(getObjectMultiBulkReply());
+	}
+	
 	
 	private List<String> getJobParamsAsList(JobParams params) {
 		List<String> jobParams = new LinkedList<String>();
@@ -142,6 +161,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		
 		return jobParams;
 	}
+
 
 
 
