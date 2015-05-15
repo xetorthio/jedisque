@@ -168,7 +168,7 @@ public class JedisqueTest {
 	}
 
 	@Test
-	public void workig() {
+	public void working() {
 		String queue = getQueueName();
 		String jobId = q.addJob(queue, "testJob", 10);
 		Long secs = q.working(jobId);
