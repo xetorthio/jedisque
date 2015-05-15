@@ -52,7 +52,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		return getBulkReply();
 	}
 
-	public String addJob(String queueName, String job, int mstimeout, JobParams params) {
+	public String addJob(String queueName, String job, long mstimeout, JobParams params) {
 		List<String> addJobCommand = new LinkedList<String>();
 		addJobCommand.add(queueName);
 		addJobCommand.add(job);
@@ -71,7 +71,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 	}
 	
 
-	public List<Job> getJob(int timeout, int count, String ...queueNames) {
+	public List<Job> getJob(long timeout, long count, String ...queueNames) {
 		final byte[][] params = new byte[queueNames.length + 5][];
 		params[0] = Keyword.TIMEOUT.raw;
 		params[1] = Protocol.toByteArray(timeout);
@@ -104,7 +104,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 
 	}
 
-	public List<Job> qpeek(String queueName, int count) {
+	public List<Job> qpeek(String queueName, long count) {
 		sendCommand(Command.QPEEK, SafeEncoder.encode(queueName), Protocol.toByteArray(count));
 		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
