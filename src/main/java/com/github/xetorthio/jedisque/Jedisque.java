@@ -106,7 +106,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 
 	public List<Job> qpeek(String queueName, int count) {
 		sendCommand(Command.QPEEK, SafeEncoder.encode(queueName), Protocol.toByteArray(count));
-		return JedisqueBuilder.JOB_PEEK.build(getObjectMultiBulkReply());
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
 
 	public Long delJob(String jobId) {

@@ -31,26 +31,6 @@ public class JedisqueBuilder extends BuilderFactory {
 
 	};
 
-	public static final Builder<List<Job>> JOB_PEEK = new Builder<List<Job>>() {
-		@SuppressWarnings("unchecked")
-		public List<Job> build(Object data) {
-			if (null == data) {
-				return null;
-			}
-			List<List<byte[]>> l = (List<List<byte[]>>) data;
-
-			// Order matters that's why we're using a LL
-			final List<Job> result = new LinkedList<Job>();
-
-			for (List<byte[]> rawJob : l) {
-				result.add(new Job(null, SafeEncoder.encode(rawJob.get(0)), SafeEncoder.encode(rawJob.get(1))));
-			}
-
-			return result;
-		}
-
-	};
-	
 	public static final Builder<JobInfo> JOB_SHOW = new Builder<JobInfo>() {
 		@SuppressWarnings("unchecked")
 		public JobInfo build(Object data) {
