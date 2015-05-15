@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,21 +34,14 @@ public class JedisqueTest {
 		String jobId = q.addJob(getQueueName(), "message", 10);
 		assertNotNull(jobId);
 	}
-	
 
 	@Test
 	public void addJobWithParams() {
-		JobParams params = new JobParams()
-		.setReplicate(1)
-		.setRetry(10)
-		.setTTL(10)
-		.setMaxlen(10)
-		.setDelay(10)
-		.setAsync(true);
+		JobParams params = new JobParams().setReplicate(1).setRetry(10).setTTL(10).setMaxlen(10).setDelay(10)
+				.setAsync(true);
 		String jobId = q.addJob(getQueueName(), "message", 10, params);
 		assertNotNull(jobId);
 	}
-
 
 	@Test
 	public void getJob() {
@@ -59,7 +53,7 @@ public class JedisqueTest {
 		assertEquals("message", job.getBody());
 		assertEquals(queue, job.getQueueName());
 	}
-	
+
 	@Test
 	public void getJobWithParams() {
 		String queue = getQueueName();
@@ -137,26 +131,26 @@ public class JedisqueTest {
 
 	@Test
 	public void enqueue() {
-			String queue = getQueueName();
-			String jobId = q.addJob(queue, "testJob", 10);
-			Long count = q.enqueue(jobId);
-			assertEquals(count.longValue(), 0);
+		String queue = getQueueName();
+		String jobId = q.addJob(queue, "testJob", 10);
+		Long count = q.enqueue(jobId);
+		assertEquals(count.longValue(), 0);
 	}
 
 	@Test
 	public void dequeue() throws InterruptedException {
-			String queue = getQueueName();
-			String jobId = q.addJob(queue, "testJob", 10);
-			Long count = q.dequeue(jobId);
-			assertEquals(count.longValue(), 1);
+		String queue = getQueueName();
+		String jobId = q.addJob(queue, "testJob", 10);
+		Long count = q.dequeue(jobId);
+		assertEquals(count.longValue(), 1);
 	}
 
 	@Test
 	public void delJob() {
-			String queue = getQueueName();
-			String jobId = q.addJob(queue, "testJob", 10);
-			Long count = q.delJob(jobId);
-			assertEquals(count.longValue(), 1);
+		String queue = getQueueName();
+		String jobId = q.addJob(queue, "testJob", 10);
+		Long count = q.delJob(jobId);
+		assertEquals(count.longValue(), 1);
 	}
 
 	@Test
@@ -165,6 +159,21 @@ public class JedisqueTest {
 		String jobId = q.addJob(queue, "testJob", 10);
 		JobInfo jobInfo = q.show(jobId);
 		assertNotNull(jobInfo);
+	}
+
+	@Test
+	public void ping() {
+		String pong = q.ping();
+		assertNotNull(pong);
+	}
+
+	@Test
+	public void workig() {
+		String queue = getQueueName();
+		String jobId = q.addJob(queue, "testJob", 10);
+		Long secs = q.working(jobId);
+		assertNotNull(secs);
+		Assert.assertNotEquals(0L, secs.longValue());
 	}
 
 	@Test

@@ -21,7 +21,6 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		try {
 			uris.add(new URI("disque://localhost:" + DISQUE_PORT));
 		} catch (URISyntaxException e) {
-			// TODO:
 		}
 	}
 
@@ -162,8 +161,14 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		return jobParams;
 	}
 
+	public String ping() {
+		sendCommand(Command.PING);
+		return getBulkReply();
+	}
 
-
-
+	public Long working(String jobId) {
+		sendCommand(Command.WORKING, jobId);
+		return getIntegerReply();
+	}
 	
 }
