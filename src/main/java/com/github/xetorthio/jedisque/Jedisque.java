@@ -21,7 +21,6 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		try {
 			uris.add(new URI("disque://localhost:" + DISQUE_PORT));
 		} catch (URISyntaxException e) {
-			// TODO:
 		}
 	}
 
@@ -53,7 +52,7 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		return getBulkReply();
 	}
 
-	public String addJob(String queueName, String job, int mstimeout, JobParams params) {
+	public String addJob(String queueName, String job, long mstimeout, JobParams params) {
 		List<String> addJobCommand = new LinkedList<String>();
 		addJobCommand.add(queueName);
 		addJobCommand.add(job);
@@ -67,6 +66,19 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		final byte[][] params = new byte[queueNames.length + 1][];
 		params[0] = Keyword.FROM.raw;
 		System.arraycopy(SafeEncoder.encodeMany(queueNames), 0, params, 1, queueNames.length);
+		sendCommand(Command.GETJOB, params);
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
+	}
+	
+
+	public List<Job> getJob(long timeout, long count, String ...queueNames) {
+		final byte[][] params = new byte[queueNames.length + 5][];
+		params[0] = Keyword.TIMEOUT.raw;
+		params[1] = Protocol.toByteArray(timeout);
+		params[2] = Keyword.COUNT.raw;
+		params[3] = Protocol.toByteArray(count);
+		params[4] = Keyword.FROM.raw;
+		System.arraycopy(SafeEncoder.encodeMany(queueNames), 0, params, 5, queueNames.length);
 		sendCommand(Command.GETJOB, params);
 		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
@@ -92,9 +104,9 @@ public class Jedisque extends redis.clients.jedis.Connection {
 
 	}
 
-	public List<Job> qpeek(String queueName, int count) {
+	public List<Job> qpeek(String queueName, long count) {
 		sendCommand(Command.QPEEK, SafeEncoder.encode(queueName), Protocol.toByteArray(count));
-		return JedisqueBuilder.JOB_PEEK.build(getObjectMultiBulkReply());
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
 
 	public Long delJob(String jobId) {
@@ -115,6 +127,12 @@ public class Jedisque extends redis.clients.jedis.Connection {
 	public Long fastack(String ...jobIds) {
 		sendCommand(Command.FASTACK, jobIds);
 		return getIntegerReply();
+	}
+	
+
+	public JobInfo show(String jobId) {
+		sendCommand(Command.SHOW, jobId);
+		return JedisqueBuilder.JOB_SHOW.build(getObjectMultiBulkReply());
 	}
 	
 	
@@ -143,7 +161,14 @@ public class Jedisque extends redis.clients.jedis.Connection {
 		return jobParams;
 	}
 
+	public String ping() {
+		sendCommand(Command.PING);
+		return getBulkReply();
+	}
 
-
+	public Long working(String jobId) {
+		sendCommand(Command.WORKING, jobId);
+		return getIntegerReply();
+	}
 	
 }
