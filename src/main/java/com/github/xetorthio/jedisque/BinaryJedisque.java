@@ -1,0 +1,94 @@
+package com.github.xetorthio.jedisque;
+
+import redis.clients.jedis.Protocol;
+import redis.clients.jedis.exceptions.JedisConnectionException;
+import redis.clients.util.SafeEncoder;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+
+public class BinaryJedisque extends redis.clients.jedis.Connection {
+	static final private int DISQUE_PORT = 7711;
+	private final List<URI> uris = new ArrayList<URI>();
+	private Random randomGenerator = new Random();
+
+	public BinaryJedisque() {
+		try {
+			uris.add(new URI("disque://localhost:" + DISQUE_PORT));
+		} catch (URISyntaxException e) {
+		}
+	}
+
+	public BinaryJedisque(URI... uris) {
+		this.uris.addAll(Arrays.asList(uris));
+	}
+
+	@Override
+	public void connect() {
+		while (!this.isConnected()) {
+			if (uris.size() == 0) {
+				throw new JedisConnectionException("Could not connect to any of the provided nodes");
+			}
+			int index = randomGenerator.nextInt(uris.size());
+
+			try {
+				URI uri = uris.get(index);
+				setHost(uri.getHost());
+				setPort(uri.getPort());
+				super.connect();
+			} catch (JedisConnectionException e) {
+				uris.remove(index);
+			}
+		}
+	}
+
+	public String addJob(byte[] queueName, byte[] job, long mstimeout) {
+		sendCommand(Command.ADDJOB, queueName, job, Protocol.toByteArray(mstimeout));
+		return getBulkReply();
+	}
+
+	public String addJob(byte[] queueName, byte[] job, long mstimeout, JobParams params) {
+		List<byte[]>addJobCommand = new ArrayList<byte[]>();
+		addJobCommand.add(queueName);
+		addJobCommand.add(job);
+		addJobCommand.add(Protocol.toByteArray(mstimeout));
+		addJobCommand.addAll(params.getParams());
+		sendCommand(Command.ADDJOB, addJobCommand.toArray(new byte[addJobCommand.size()][]));
+		return getBulkReply();
+	}
+
+	public List<Job> getJob(byte[]... queueNames) {
+		final byte[][] params = new byte[queueNames.length + 1][];
+		params[0] = Keyword.FROM.raw;
+		System.arraycopy(queueNames, 0, params, 1, queueNames.length);
+		sendCommand(Command.GETJOB, params);
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
+	}
+	
+
+	public List<Job> getJob(long timeout, long count, byte[] ...queueNames) {
+		final byte[][] params = new byte[queueNames.length + 5][];
+		params[0] = Keyword.TIMEOUT.raw;
+		params[1] = Protocol.toByteArray(timeout);
+		params[2] = Keyword.COUNT.raw;
+		params[3] = Protocol.toByteArray(count);
+		params[4] = Keyword.FROM.raw;
+		System.arraycopy(queueNames, 0, params, 5, queueNames.length);
+		sendCommand(Command.GETJOB, params);
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
+	}
+
+
+	public String ping() {
+		sendCommand(Command.PING);
+		return getBulkReply();
+	}
+
+	public Long working(String jobId) {
+		sendCommand(Command.WORKING, jobId);
+		return getIntegerReply();
+	}
+
+
+}

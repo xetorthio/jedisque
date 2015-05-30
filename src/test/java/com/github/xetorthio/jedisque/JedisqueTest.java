@@ -37,7 +37,7 @@ public class JedisqueTest {
 
 	@Test
 	public void addJobWithParams() {
-		JobParams params = new JobParams().setReplicate(1).setRetry(10).setTTL(10).setMaxlen(10).setDelay(10)
+		JobParams params = new JobParams().setReplicate(1).setRetry(10).setTTL(10).setMaxlen(10).setDelay(5)
 				.setAsync(true);
 		String jobId = q.addJob(getQueueName(), "message", 10, params);
 		assertNotNull(jobId);
@@ -50,7 +50,7 @@ public class JedisqueTest {
 		List<Job> jobs = q.getJob(queue);
 		Job job = jobs.get(0);
 		assertEquals(jobId, job.getId());
-		assertEquals("message", job.getBody());
+		assertEquals("message", job.getStringBody());
 		assertEquals(queue, job.getQueueName());
 	}
 
@@ -111,9 +111,9 @@ public class JedisqueTest {
 		q.addJob(queue, "testJob2", 10);
 		List<Job> jobs = q.qpeek(queue, 2);
 		Job job = jobs.get(0);
-		assertEquals(job.getBody(), "testJob");
+		assertEquals(job.getStringBody(), "testJob");
 		job = jobs.get(1);
-		assertEquals(job.getBody(), "testJob2");
+		assertEquals(job.getStringBody(), "testJob2");
 	}
 
 	@Test

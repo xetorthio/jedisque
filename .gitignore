@@ -19,3 +19,6 @@ nodes.conf
 
 pom.xml.releaseBackup
 release.properties
+
+.idea
+*.iml

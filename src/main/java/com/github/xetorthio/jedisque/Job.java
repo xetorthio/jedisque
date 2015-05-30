@@ -1,15 +1,17 @@
 package com.github.xetorthio.jedisque;
 
+import redis.clients.util.SafeEncoder;
+
 public class Job {
 
 	private String id;
 	private String queueName;
-	private String body;
+	private byte[] body;
 
 	public Job() {
 	}
 
-	public Job(String queueName, String id, String body) {
+	public Job(String queueName, String id, byte[] body) {
 		super();
 		this.id = id;
 		this.queueName = queueName;
@@ -32,11 +34,15 @@ public class Job {
 		this.queueName = queueName;
 	}
 
-	public String getBody() {
+	public byte[] getBody() {
 		return body;
 	}
 
-	public void setBody(String body) {
+	public String getStringBody() {
+		return SafeEncoder.encode(body);
+	}
+
+	public void setBody(byte[] body) {
 		this.body = body;
 	}
 

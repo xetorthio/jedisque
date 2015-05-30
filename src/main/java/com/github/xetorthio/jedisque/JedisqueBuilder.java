@@ -1,12 +1,11 @@
 package com.github.xetorthio.jedisque;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.BuilderFactory;
 import redis.clients.util.SafeEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JedisqueBuilder extends BuilderFactory {
 
@@ -19,11 +18,11 @@ public class JedisqueBuilder extends BuilderFactory {
 			List<List<byte[]>> l = (List<List<byte[]>>) data;
 
 			// Order matters that's why we're using a LL
-			final List<Job> result = new LinkedList<Job>();
+			final List<Job> result = new ArrayList<Job>();
 
 			for (List<byte[]> rawJob : l) {
-				result.add(new Job(SafeEncoder.encode(rawJob.get(0)), SafeEncoder.encode(rawJob.get(1)), SafeEncoder
-						.encode(rawJob.get(2))));
+				result.add(new Job(SafeEncoder.encode(rawJob.get(0)), SafeEncoder.encode(rawJob.get(1)),
+						rawJob.get(2)));
 			}
 
 			return result;
