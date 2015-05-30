@@ -48,24 +48,4 @@ public class BinaryJedisqueTest {
 		String jobId = q.addJob(getQueueName(), binaryValue, 10, params);
 		assertNotNull(jobId);
 	}
-
-	@Test
-	public void getJob() {
-		byte[] queue = getQueueName();
-		String jobId = q.addJob(queue, binaryValue, 10);
-		List<Job> jobs = q.getJob(queue);
-		Job job = jobs.get(0);
-		assertEquals(jobId, job.getId());
-		assertTrue(Arrays.equals(binaryValue, job.getBody()));
-		assertEquals(SafeEncoder.encode(queue), job.getQueueName());
-	}
-
-	@Test
-	public void getJobWithParams() {
-		byte[] queue = getQueueName();
-		q.addJob(queue, binaryValue, 10);
-		q.addJob(queue, binaryValue, 10);
-		List<Job> jobs = q.getJob(100, 2, queue);
-		assertEquals(jobs.size(), 2);
-	}
 }

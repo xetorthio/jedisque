@@ -31,12 +31,24 @@ public class Jedisque extends BinaryJedisque {
 	}
 
 	public List<Job> getJob(String... queueNames) {
-		return getJob(SafeEncoder.encodeMany(queueNames));
+		final byte[][] params = new byte[queueNames.length + 1][];
+		params[0] = Keyword.FROM.raw;
+		System.arraycopy(SafeEncoder.encodeMany(queueNames), 0, params, 1, queueNames.length);
+		sendCommand(Command.GETJOB, params);
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
-	
+
 
 	public List<Job> getJob(long timeout, long count, String ...queueNames) {
-		return getJob(timeout, count, SafeEncoder.encodeMany(queueNames));
+		final byte[][] params = new byte[queueNames.length + 5][];
+		params[0] = Keyword.TIMEOUT.raw;
+		params[1] = Protocol.toByteArray(timeout);
+		params[2] = Keyword.COUNT.raw;
+		params[3] = Protocol.toByteArray(count);
+		params[4] = Keyword.FROM.raw;
+		System.arraycopy(SafeEncoder.encodeMany(queueNames), 0, params, 5, queueNames.length);
+		sendCommand(Command.GETJOB, params);
+		return JedisqueBuilder.JOB_LIST.build(getObjectMultiBulkReply());
 	}
 
 	public Long ackjob(String... jobIds) {
