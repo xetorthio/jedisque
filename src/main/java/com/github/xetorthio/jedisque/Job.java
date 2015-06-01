@@ -2,16 +2,18 @@ package com.github.xetorthio.jedisque;
 
 import redis.clients.util.SafeEncoder;
 
+import java.util.Arrays;
+
 public class Job {
 
-	private String id;
-	private String queueName;
+	private byte[] id;
+	private byte[] queueName;
 	private byte[] body;
 
 	public Job() {
 	}
 
-	public Job(String queueName, String id, byte[] body) {
+	public Job(byte[] queueName, byte[] id, byte[] body) {
 		super();
 		this.id = id;
 		this.queueName = queueName;
@@ -19,22 +21,34 @@ public class Job {
 	}
 
 	public String getId() {
+		return SafeEncoder.encode(id);
+	}
+
+	public byte[] getIdAsBytes() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(byte[] id) {
 		this.id = id;
 	}
 
 	public String getQueueName() {
-		return queueName;
+		return SafeEncoder.encode(queueName);
 	}
 
-	public void setQueueName(String queueName) {
+	public byte[] getQueueNameAsBytes() {
+		return this.queueName;
+	}
+
+	public void setQueueName(byte[] queueName) {
 		this.queueName = queueName;
 	}
 
-	public byte[] getBody() {
+	public String getBody() {
+		return SafeEncoder.encode(body);
+	}
+
+	public byte[] getBodyAsBytes() {
 		return body;
 	}
 
@@ -59,6 +73,7 @@ public class Job {
 
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -69,17 +84,17 @@ public class Job {
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!Arrays.equals(id, other.id))
 			return false;
 		if (body == null) {
 			if (other.body != null)
 				return false;
-		} else if (!body.equals(other.body))
+		} else if (!Arrays.equals(body, other.body))
 			return false;
 		if (queueName == null) {
 			if (other.queueName != null)
 				return false;
-		} else if (!queueName.equals(other.queueName))
+		} else if (!Arrays.equals(queueName, other.queueName))
 			return false;
 		return true;
 	}

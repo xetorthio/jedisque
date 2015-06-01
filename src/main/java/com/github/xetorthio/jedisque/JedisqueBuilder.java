@@ -21,7 +21,7 @@ public class JedisqueBuilder extends BuilderFactory {
 			final List<Job> result = new ArrayList<Job>();
 
 			for (List<byte[]> rawJob : l) {
-				result.add(new Job(SafeEncoder.encode(rawJob.get(0)), SafeEncoder.encode(rawJob.get(1)),
+				result.add(new Job(rawJob.get(0), rawJob.get(1),
 						rawJob.get(2)));
 			}
 
