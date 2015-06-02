@@ -1,66 +1,53 @@
 package com.github.xetorthio.jedisque;
 
+import redis.clients.jedis.Protocol;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 public class JobParams {
 
-	private Integer replicate;
-	private Integer delay;
-	private Integer retry;
-	private Integer ttl;
-	private Integer maxlen;
-	private Boolean async;
-
-	public Integer getReplicate() {
-		return replicate;
-	}
+	private List<byte[]> params = new ArrayList<byte[]>();
 
 	public JobParams setReplicate(Integer replicate) {
-		this.replicate = replicate;
+		params.add(Keyword.REPLICATE.raw);
+		params.add(Protocol.toByteArray(replicate));
 		return this;
-	}
-
-	public Integer getDelay() {
-		return delay;
 	}
 
 	public JobParams setDelay(Integer delay) {
-		this.delay = delay;
+		params.add(Keyword.DELAY.raw);
+		params.add(Protocol.toByteArray(delay));
 		return this;
-	}
-
-	public Integer getRetry() {
-		return retry;
 	}
 
 	public JobParams setRetry(Integer retry) {
-		this.retry = retry;
+		params.add(Keyword.RETRY.raw);
+		params.add(Protocol.toByteArray(retry));
 		return this;
-	}
-
-	public Integer getTTL() {
-		return ttl;
 	}
 
 	public JobParams setTTL(Integer ttl) {
-		this.ttl = ttl;
+		params.add(Keyword.TTL.raw);
+		params.add(Protocol.toByteArray(ttl));
 		return this;
-	}
-
-	public Integer getMaxlen() {
-		return maxlen;
 	}
 
 	public JobParams setMaxlen(Integer maxlen) {
-		this.maxlen = maxlen;
+		params.add(Keyword.MAXLEN.raw);
+		params.add(Protocol.toByteArray(maxlen));
 		return this;
-	}
-
-	public Boolean getAsync() {
-		return async;
 	}
 
 	public JobParams setAsync(Boolean async) {
-		this.async = async;
+		params.add(Keyword.ASYNC.raw);
 		return this;
+	}
+
+	public Collection<byte[]> getParams() {
+		return Collections.unmodifiableCollection(params);
 	}
 	
 }
