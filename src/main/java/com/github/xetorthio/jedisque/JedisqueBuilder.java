@@ -37,22 +37,32 @@ public class JedisqueBuilder extends BuilderFactory {
 				return null;
 			}
 			List<byte[]> showRaw = (List<byte[]>) data;
-			
-			return new JobInfo(SafeEncoder.encode(showRaw.get(1)), 
+			ArrayList<byte[]> awakeWithinRaw = new ArrayList<byte[]>();
+			// 23 i am not sure the meaning
+			awakeWithinRaw.add(showRaw.get(22));
+			return new JobInfo(SafeEncoder.encode(showRaw.get(1)),
 					SafeEncoder.encode(showRaw.get(3)),
 					SafeEncoder.encode(showRaw.get(5)), 
 					BuilderFactory.LONG.build(showRaw.get(7)), 
 					BuilderFactory.LONG.build(showRaw.get(9)),
 					BuilderFactory.LONG.build(showRaw.get(11)),
 					BuilderFactory.LONG.build(showRaw.get(13)), 
-					BuilderFactory.LONG.build(showRaw.get(15)), 
-					BuilderFactory.STRING_LIST.build(showRaw.get(17)), 
-					BuilderFactory.STRING_LIST.build(showRaw.get(19)),
-					BuilderFactory.LONG.build(showRaw.get(21)),
-					BuilderFactory.LONG.build(showRaw.get(23)), 
-					SafeEncoder.encode(showRaw.get(25)));
+					BuilderFactory.LONG.build(showRaw.get(15)),
+					BuilderFactory.LONG.build(showRaw.get(17)),
+					BuilderFactory.LONG.build(showRaw.get(19)),
+					BuilderFactory.STRING_LIST.build(showRaw.get(21)),
+					BuilderFactory.STRING_LIST.build(awakeWithinRaw),
+					""+showRaw.get(25));
 		}
 
 	};
 
+	public static void main(String[] args) {
+		long l = 0;
+		String ls = "0";
+		byte[] b = ls.getBytes();
+		ArrayList<byte[]> al = new ArrayList<byte[]>();
+		al.add(b);
+		System.out.println("ff");
+	}
 }
