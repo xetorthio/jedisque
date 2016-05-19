@@ -50,6 +50,7 @@ public class BinaryJedisque extends redis.clients.jedis.Connection {
                 } else {
 
                     super.setConnectionTimeout(0);
+                    super.setSoTimeout(0);
                     super.connect();
                 }
             } catch (JedisConnectionException e) {
