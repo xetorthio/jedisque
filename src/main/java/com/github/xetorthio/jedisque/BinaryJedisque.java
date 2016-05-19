@@ -1,15 +1,14 @@
 package com.github.xetorthio.jedisque;
 
-import redis.clients.jedis.Connection;
 import redis.clients.jedis.Protocol;
-import redis.clients.jedis.ProtocolCommand;
 import redis.clients.jedis.exceptions.JedisConnectionException;
-import redis.clients.util.SafeEncoder;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class BinaryJedisque extends redis.clients.jedis.Connection {
     static final private int DISQUE_PORT = 7711;
