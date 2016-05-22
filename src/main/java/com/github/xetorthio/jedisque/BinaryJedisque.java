@@ -6,18 +6,26 @@ import redis.clients.util.SafeEncoder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class BinaryJedisque extends redis.clients.jedis.Connection {
 	static final private int DISQUE_PORT = 7711;
 	private final List<URI> uris = new ArrayList<URI>();
 	private Random randomGenerator = new Random();
+	private int timeout = 2000;
 
 	public BinaryJedisque() {
 		try {
 			uris.add(new URI("disque://localhost:" + DISQUE_PORT));
 		} catch (URISyntaxException e) {
 		}
+	}
+	public BinaryJedisque(int timeout) {
+		this();
+		this.timeout = timeout;
 	}
 
 	public BinaryJedisque(URI... uris) {
@@ -36,7 +44,12 @@ public class BinaryJedisque extends redis.clients.jedis.Connection {
 				URI uri = uris.get(index);
 				setHost(uri.getHost());
 				setPort(uri.getPort());
+				if (timeout = 0) {
+					super.setConnectionTimeout(0);
+					super.setSoTimeout(0);
+				}
 				super.connect();
+
 			} catch (JedisConnectionException e) {
 				uris.remove(index);
 			}
