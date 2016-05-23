@@ -2,6 +2,7 @@ package com.github.xetorthio.jedisque;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class JedisqueTest {
 	private static String getQueueName() {
@@ -53,6 +55,60 @@ public class JedisqueTest {
 		assertEquals("message", job.getStringBody());
 		assertEquals(queue, job.getQueueName());
 	}
+	@Test
+	public void getInfiniteTimeJobTest() throws Exception{
+		final Jedisque q = new Jedisque(0);
+		final String queue = getQueueName();
+		final boolean[] result = {false};
+		Thread thread = new Thread(){
+
+			@Override
+			public void run(){
+				List<Job> jobs = q.getJob(queue);
+				Job job = jobs.get(0);
+				assertEquals("message", job.getStringBody());
+				result[0] = true;
+			}
+		};
+		thread.start();
+		Thread.sleep(5000);
+		Jedisque q1 = new Jedisque();
+		q1.addJob(queue, "message", 10);
+		thread.join();
+		Assert.assertTrue(result[0]);
+	}
+
+
+	@Test
+	public void getTimeoutJobTest(){
+		final Jedisque q = new Jedisque(2000);
+		final String queue = getQueueName();
+		final boolean[] result = {false};
+		Thread thread = new Thread(){
+			@Override
+			public void run(){
+				try {
+					List<Job> jobs = q.getJob(queue);
+					fail("can not get the job");
+				}catch (JedisConnectionException ex){
+					assertEquals("java.net.SocketTimeoutException: Read timed out", ex.getMessage());
+					result[0] = true;
+				}
+			}
+		};
+		thread.start();
+		try {
+			Thread.sleep(5000);
+			Jedisque q1 = new Jedisque();
+			q1.addJob(queue, "message", 10);
+			thread.join();
+			Assert.assertTrue(result[0]);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			fail("unknow exception");
+		}
+	}
+
 
 	@Test
 	public void getJobWithParams() {
