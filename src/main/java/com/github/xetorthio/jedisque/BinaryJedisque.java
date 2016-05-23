@@ -44,10 +44,8 @@ public class BinaryJedisque extends redis.clients.jedis.Connection {
 				URI uri = uris.get(index);
 				setHost(uri.getHost());
 				setPort(uri.getPort());
-				if (timeout = 0) {
-					super.setConnectionTimeout(0);
-					super.setSoTimeout(0);
-				}
+
+				super.setSoTimeout(timeout);
 				super.connect();
 
 			} catch (JedisConnectionException e) {
